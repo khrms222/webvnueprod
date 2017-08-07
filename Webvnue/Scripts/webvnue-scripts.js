@@ -389,6 +389,84 @@
             var target = document.getElementById(objDiv[i].id)
             target.scrollTop = target.scrollHeight;
         }
-    }    
+
+    }
+
+    function convertDateTime(date) {
+        var hours = date.getHours();
+        var ampm = hours >= 12 ? 'PM' : 'AM';
+        if (hours > 12) {
+            hours = hours - 12
+        }
+        if (hours == 0) {
+            hours = 12
+        }
+        date = ('' + (date.getUTCMonth() + 1)).slice(-2) + '/' +
+            ('00' + date.getDate()).slice(-2) + '/' +
+            date.getUTCFullYear() + ' ' +
+            hours + ':' +
+            ('00' + date.getUTCMinutes()).slice(-2) + ':' +
+            ('00' + date.getUTCSeconds()).slice(-2) + ' ' + ampm;
+        return date
+
+    }
+
+    
+    function yourFunction() {
+        var commentDivs = document.getElementsByClassName("myBox");
+
+        
+        for (i = 0; i < commentDivs.length; i++) {
+            //$('#' + commentDivs[i].id).load(document.URL + ' #' + commentDivs[i].id);
+
+            var postid = commentDivs[i].getAttribute("post-id");
+            
+            var comments = $('#' + commentDivs[i].id).find('.commentTextClass');
+
+            if (typeof comments[comments.length - 1] != 'undefined') {
+                var timestamp = comments[comments.length - 1].getAttribute("comment-timestamp")
+
+                var datavalue = { "PostId": postid, "TimeStamp": timestamp };
+
+                $.ajax({
+                    url: '/Home/CheckIfCommentsUpdated',
+                    type: 'POST',
+                    data: datavalue,
+                    success: function (data) {
+                        /*
+                        var date = data['Result'];
+                        date = new Date(parseInt(date.replace("/Date(", "").replace(")/", ""), 10));
+                        
+                        console.log('DB MAX: ' + convertDateTime(date));
+                        
+                        timestamp = new Date(parseInt(timestamp.replace("/Date(", "").replace(")/", ""), 10));
+                        console.log('HTML TS: ' + convertDateTime(timestamp));
+                        
+                        console.log(timestamp);
+                        */
+
+                        console.log(data['Result']);
+                    },
+                    error: function (request, error) {
+                        alert("Request: " + JSON.stringify(request));
+                    }
+                });
+
+                //console.log(timestamp);
+
+                //console.log(comments[comments.length - 1].getAttribute("timestamp"));
+            }
+        }
+        
+        //var comments = $('#' + commentDivs[commentDivs.length - 2].id).find('.commentTextClass');
+        //console.log(comments[comments.length - 1])
+
+        //console.log(commentDivs[commentDivs.length-1]);
+
+        setTimeout(yourFunction, 30000);
+    }
+
+    yourFunction();
+    
 
 });

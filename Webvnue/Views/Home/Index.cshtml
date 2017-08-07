@@ -297,11 +297,11 @@ else
                             <div class="panel-body">
                                 <div class="commentDiv">
                                     <div class="scrollbar" id="@post.Id-scrollbar">
-                                    <div class="myBox" id="@post.Id-commentBox">
+                                    <div class="myBox" id="@post.Id-commentBox" post-id="@post.Id">
                                     <ul id="@post.Id-ul">
                                     @foreach (var comment in post.Comments)
                                     {
-                                            <li id="commentText">
+                                            <li id="commentText" class="commentTextClass" comment-timestamp="@comment.TimeStamp">
                                                 <img class="img-thumbnail img-responsive" src="/Home/profileimg/@comment.OriginalUser.Id" width="30" height="30" />
                                                 <a href="~/@comment.OriginalUser.UserName"><b>@comment.OriginalUser.FirstName @comment.OriginalUser.LastName</b></a> : @comment.Message<span class="pull-right"><small>@comment.TimeStamp.Month/@comment.TimeStamp.Day/@comment.TimeStamp.Year</small></span>
                                             </li>

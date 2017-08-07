@@ -366,11 +366,33 @@ namespace Webvnue.Controllers
             return Redirect(Request.UrlReferrer.ToString());
         }
 
+        [HttpPost]
         public ActionResult DeletePost(string PostId)
         {
             deletePost(PostId);
 
             return null;
+        }
+
+        [HttpPost]
+        public ActionResult CheckIfCommentsUpdated(string PostId, DateTime TimeStamp)
+        {
+            bool result;
+
+            
+            if (checkIfCommentsUpdated(PostId, TimeStamp))
+            {
+                result = true;
+            }
+            else
+            {
+                result = false;
+            }
+            
+            return Json(new
+            {
+                Result = result
+            });
         }
 
         private Models.UserProfileBio getUserProfileBio(string id)
@@ -848,6 +870,25 @@ namespace Webvnue.Controllers
             db.Posts.Remove(db.Posts.FirstOrDefault(x => x.Id == postId));
 
             db.SaveChanges();
+        }
+
+        private bool checkIfCommentsUpdated(string postid, DateTime timeStamp)
+        {
+            var db = new Models.MyIdentityDbContext();
+
+            Models.Post postToCheck = db.Posts.FirstOrDefault(x => x.Id == postid);
+
+            DateTime latestTimeStamp = postToCheck.Comments.Max(x => x.TimeStamp);
+
+
+            if (latestTimeStamp.Date.Equals(postToCheck.TimeStamp.Date))
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
     }
 }
